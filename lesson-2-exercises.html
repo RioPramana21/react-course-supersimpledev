@@ -11,8 +11,33 @@
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
+      function LoginForm(){
+        return(
+          <>
+            <div>
+              <input type="text" placeholder="Email" />
+            </div>
+            <div>
+              <input type="password" placeholder="Password" />
+            </div>
+            <button>Login</button><button>Sign up</button>
+          </>
+        );
+      };
+
+      function App(){
+        return(
+          <>
+            <p>Hello, welcome to my website</p>
+            <LoginForm />
+          </>
+        );
+      };
+
       const container = document.querySelector('.js-container');
-      ReactDOM.createRoot(container).render('Welcome to SuperSimpleDev React Course');
+      const root = ReactDOM.createRoot(container)
+
+      root.render(<App />);
     </script>
   </body>
 </html>
