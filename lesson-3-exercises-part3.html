@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      function ChatInput({chatMessages, setChatMessages}){
+        const [inputText, setInputText] = React.useState('');
+        const [isLoading, setIsLoading] = React.useState(false);
+
+        function saveInputText(event){
+          setInputText(event.target.value)
+        };
+
+        async function sendMessage(){
+          if (!isLoading && inputText !== ''){
+              const newChatMessages = [
+                ...chatMessages,
+                {
+                  message: inputText,
+                  sender: 'user',
+                  id: crypto.randomUUID()
+                }
+              ];
+              setChatMessages(newChatMessages);
+              setInputText('');
+              /*
+              3k. In the real world, the Chatbot does not respond immediately, it takes some time to think, and then respond (see the final Chatbot project). We'll learn how to handle this situation.
+              Change Chatbot.getResponse to Chatbot.getResponseAsync (for this function, the Chatbot thinks for a second, and then responds).
+              Chatbot.getResponseAsync returns a promise (promise = a value that is not available yet, but will be available in the future).
+              Add await in front of Chatbot.getResponseAsync to wait for it to finish (wait for the value to be available before continuing).
+              Add async in front of function sendMessage() (because we can only use await inside an async function).
+              As a review, this is a JavaScript feature called async / await
+              */
+              setChatMessages([
+                ...newChatMessages,
+                {
+                  message: 'Loading...',
+                  sender: 'robot',
+                  id: crypto.randomUUID()
+                }
+              ]);
+              setIsLoading(true);
+    
+              const response = await Chatbot.getResponseAsync(
+                inputText
+              );
+    
+              setChatMessages([
+                ...newChatMessages,
+                {
+                  message: response,
+                  sender: 'robot',
+                  id: crypto.randomUUID()
+                }
+              ]);
+            };
+            setIsLoading(false);
+          }
+
+        /*
+          If we want to send the message when the user hits 'Enter'
+          We can use the 'onKeyDown' event prop
+          Then, to get the key that was pressed, we access `event.key`
+        */
+        function actionKeyPressed(event){
+          if (event.key === 'Enter'){
+            sendMessage()
+          } else if (event.key === 'Escape'){
+            setInputText('')
+          }
+        }
+
+        return (
+          <>
+            <input 
+              placeholder="Send a message to Chatbot" 
+              size="30" 
+              onChange={saveInputText}
+              onKeyDown={actionKeyPressed}
+              value={inputText}
+            />
+            <button
+              onClick = {sendMessage}
+            >Send</button>
+          </>
+        );
+      };
+
+      function ChatMessage({message, sender}){
+        return (
+          <div>
+            {sender === 'robot' && (
+              <img src="./robot.png" width="50" />
+            )}
+            {message}
+            {sender === 'user' && (
+              <img src="./user.png" width="50" />
+            )}
+          </div>
+        );
+      };
+
+      function ChatMessages({chatMessages}){
+        return(
+          <>
+            {chatMessages.map((chatMessage) => {
+                return(
+                  <ChatMessage 
+                    message={chatMessage.message}
+                    sender={chatMessage.sender}
+                    key={chatMessage.id}
+                  />
+                );
+              })
+            }
+          </>
+        );
+      };
+
+      function App(){
+        const [chatMessages, setChatMessages] = React.useState(
+          [{
+          message: 'Hello Chatbot',
+          sender: 'user',
+          id: 'id1'
+          }, {
+            message: "Hello! How can I help you?",
+            sender: "robot",
+            id: 'id2'
+          }, {
+            message: 'Can you get me todays date?',
+            sender: 'user',
+            id: 'id3'
+          }, {
+            message: "Today is December 9",
+            sender: "robot",
+            id: 'id4'
+          }]
+        );
+
+        return (
+          <>
+            <ChatInput 
+              chatMessages = {chatMessages}
+              setChatMessages = {setChatMessages}
+            />
+            <ChatMessages 
+              chatMessages = {chatMessages}
+            />
+          </>
+        );
+      };
+
+      const container = document.querySelector('.js-container');
+      const root = ReactDOM.createRoot(container);
+      root.render(<App />);
+    </script>
+  </body>
+</html>

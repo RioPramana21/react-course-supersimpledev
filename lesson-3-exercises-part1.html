@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      function CounterButton({counter, setCounter}){
+        // setting the State here will make each button have its own counter
+        // const [counter, setCounter] = React.useState(0);
+
+        function incrementClickedTimes(){
+          setCounter(counter+1)
+        }
+
+        return(
+          <button
+            onClick = {incrementClickedTimes}
+          >Clicked {counter} {counter === 1 ? 'time' : 'times'}</button>
+        )
+      }
+
+      function App(){
+        // If we lift the State up, all buttons will have the same counter
+        const [counter, setCounter] = React.useState(0);
+
+        function resetCounter(){
+          setCounter(0);
+        }
+
+        return(
+          <>
+            <CounterButton 
+              counter={counter}
+              setCounter={setCounter}
+            />
+            <CounterButton 
+              counter={counter}
+              setCounter={setCounter}
+            />
+            <button
+              onClick = {resetCounter}
+            >Reset</button>
+          </>
+        )
+      }
+
+      const container = document.querySelector('.js-container');
+      const root = ReactDOM.createRoot(container);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
