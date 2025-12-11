@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      // Component = a piece of the website (e.g. chat bubble, chat input)
+      // In React, a component name MUST start with a capital letter
+      function ChatInput(){
+        return (
+          //although input has no closing tag, all elements in JSX need closing tags
+          //<input></input>
+          // But there is a shortcut, which is by appending ' /' at the end of the opening tag
+          // it is called the self-closing element, and it works when there's no content in between the tags
+          // It's also best practice to put attributes in their own line, indented
+          <>
+            <input 
+              placeholder="Send a message to Chatbot" 
+              size="30" 
+            />
+            <button>Send</button>
+          </>
+          // To avoid extra divs, we are using Fragment (<></>) instead
+          // It's a way to group elements in React without having to use a div
+          // It's like writing <div></div>, but remove the words -> <></>
+        );
+      };
+
+      /* function ChatMessage(){
+        return (
+          <div>
+            Hello Chatbot
+            <img src="./user.png" width="50" />
+          </div>
+        );
+        // We are using div here instead of Fragment because
+        // div is a block element, which will take up its own entire line
+        // this avoids the chat message being displayed in the same line as other elements
+      }; */
+
+      /*
+      Props
+      Instead of having to manually write the message inside the Component, we want to display whatever message is given
+      Since Component is meant to be reusable (can't be reused if each message needs its own component, right?)
+      So, we can create our own attribute when we call the Component (e.g. <ChatMessage message="Hello Chatbot" />)
+      Each Component function gets 1 "props" object inside the parameter, which contains all the attributes we set when calling the Component
+      */
+      function ChatMessage({message, sender}){
+        // const message = props.message;
+        // const sender = props.sender;
+
+        // There's a shortcut to get the props values using Destructuring in JS
+        // Basically, we are taking out the properties from `props`, and putting it in their own variables
+        // We are 'destructuring' the `props` object into its properties:
+        // const {message, sender} = props;
+
+        // There's even a shorter shortcut, which is by destructuring directly in the parameter
+        // since props is the first parameter of the function
+        // This way is more commonly used in React, as it's often found in the docs & tutorials
+        // so instead of function ChatMessage(props), we can do:
+        // function ChatMessage({message, sender}){
+
+        // Based on the sender, we can decide how to display the message
+        /* if (sender === "robot"){
+          return(
+            <div>
+              <img src="./robot.png" width="50" />
+              {message}
+            </div>
+          );
+        } */
+
+        // Another thing about the code we currently have is, we ended up writing redundant JSX since the sender
+        //.. has 2 possible values (user or robot)
+        // We have a way to write a conditional statement (like if-else) in JSX by using
+        //..a shortcut provided by JS which is the Guard operator (&&)
+        // It works by checking if the left side is true, then it will return the right side
+        // e.g. {condition && <div>this div will be displayed if condition is true</div>}
+        // So now we can rewrite the above code like this:
+        return (
+          <div>
+            {sender === 'robot' && (
+              <img src="./robot.png" width="50" />
+            )}
+            {message}
+            {sender === 'user' && (
+              <img src="./user.png" width="50" />
+            )}
+          </div>
+        );
+      };
+
+      // We can insert the ChatInput() function into the div by putting it inside curly brackets
+      // As long as it returns value, we can display the HTML returned by the Component this way
+      // But there is a special syntax for Component, which is by using the function name as a tag
+      // normal: {ChatInput()}
+      // component syntax: <ChatInput></ChatInput>
+      // It's like we are creating our own HTML elements, which is the main idea of React
+      
+      /* const app = (
+            <>
+                <ChatInput />
+                <ChatMessage 
+                  message="Hello Chatbot" 
+                  sender="user" 
+                />
+                <ChatMessage 
+                  message="Hello! How can I help you?" 
+                  sender="robot" 
+                />
+                <ChatMessage 
+                  message="Hello Chatbot" 
+                  sender="user" 
+                />
+                <ChatMessage 
+                  message="Hello! How can I help you?" 
+                  sender="robot" 
+                />
+            </>
+        ); */
+
+        // The best practice to create an app is to use a Component instead of a variable
+        function App(){
+          return (
+            <>
+              <ChatInput />
+              <ChatMessage 
+                message="Hello Chatbot" 
+                sender="user" 
+              />
+              <ChatMessage 
+                message="Hello! How can I help you?" 
+                sender="robot" 
+              />
+              <ChatMessage 
+                message="Hello Chatbot" 
+                sender="user" 
+              />
+              <ChatMessage 
+                message="Hello! How can I help you?" 
+                sender="robot" 
+              />
+            </>
+          );
+        };
+
+      const container = document.querySelector('.js-container');
+      const root = ReactDOM.createRoot(container);
+      //ReactDOM.createRoot(container).render('Welcome to SuperSimpleDev React Course');
+      root.render(<App />);
+    </script>
+  </body>
+</html>

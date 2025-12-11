@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      const container = document.querySelector('.js-container');
+
+      const button = <button>Good job!</button>;
+      const paragraph = <p>My name is Rio</p>;
+
+      const div = (
+        <div>
+          <p>Cotton socks</p>
+          <p>Price: $10</p>
+          <button>Add to Cart</button>
+        </div>
+      );
+
+      const productCost = 10 + 2 * 8;
+      console.log(productCost)
+
+      const shippingCost = 5;
+
+      const productCostParagraph = <p>Product cost: ${productCost}</p>;
+
+      const orderDiv = (
+        <div>
+          <p>Product cost: ${productCost}</p>
+          <p>Shipping cost: ${shippingCost}</p>
+          <p>Total cost: ${productCost + shippingCost}</p>
+          <button>Place your order</button>
+        </div>
+      );
+
+      console.log(dayjs().format('MMMM D'));
+
+      const todayDate = dayjs().format('MMMM D');
+      const todayParagraph = <p>Today is {todayDate}</p>;
+
+      const currentTime = dayjs().format('HH:mm:ss');
+      const currentTimeParagraph = <p>Current time: {currentTime}</p>;
+
+      const root = ReactDOM.createRoot(container);
+
+      //ReactDOM.createRoot(container).render(button);
+      //ReactDOM.createRoot(container).render(paragraph);
+      //ReactDOM.createRoot(container).render(div);
+      //ReactDOM.createRoot(container).render(productCostParagraph);
+      //ReactDOM.createRoot(container).render(orderDiv);
+      //root.render(todayParagraph);
+      //root.render(currentTimeParagraph);
+      //root.render(<p>Test</p>);
+      setInterval(()=>{root.render(<p>Current time: {dayjs().format('HH:mm:ss')}</p>)}, 1000)
+      
+    </script>
+  </body>
+</html>

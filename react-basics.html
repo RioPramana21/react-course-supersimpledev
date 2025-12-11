@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <!-- Babel is a JavaScript compiler that allows us to write JSX syntax in the browser -->
+    <!-- It simply translates JSX into normal JS since our browser can only understand normal JS -->
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+        const button = <button>hello</button>;
+        const paragraph = <p>This is a paragraph created with React JSX!</p>;
+
+        // to display multiple elements, we need to create a div element
+        // because React can only render one element at a time, and div acts as a container that can hold multiple elements
+        // However, the whole div itself is still considered as a single element by React
+        // that's why we can still save it inside a variable and render it
+        const div = (
+            <div>
+                <button>hello</button>
+                <p>This is a paragraph created with React JSX! {2+2}</p>
+            </div>
+        );
+        // the variable above is the best practice on how to write React JSX with multiple elements
+        // Some advantages of React:
+        // 1. It's easier to create websites (more natural)
+        // 2. We can spot errors easier (e.g. we mispelled "button" as "buton", React will show an error as they are an actual element, not just a text)
+        // 3. We can use JavaScript expressions inside JSX (e.g. {2+2} will be evaluated to 4)
+
+      const container = document.querySelector('.js-container');
+      // `document` is a DOM in JS, which let us combine both JS and HTML together
+      // the DOM can point to the HTML div element js-container, and let us modify it in JS
+      ReactDOM.createRoot(container).render('Welcome to SuperSimpleDev React Course');
+      // to setup React, we use ReactDOM to render content inside the container
+      // we use ReactDOM.createRoot(), where we need to pass an HTML element that acts as a container
+      // This way, React will only modify that specific container, so it keeps things isolated & organized
+        // ReactDOM.createRoot(container).render(button);
+        // ReactDOM.createRoot(container).render(paragraph);
+        ReactDOM.createRoot(container).render(div);
+
+        // to learn:
+        // 1. JS variables & DOM
+        // 2. Why is React a JSX
+    </script>
+  </body>
+</html>
