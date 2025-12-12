@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      input {
+        margin: 5px 0;
+        padding: 10px;
+        border-width: 1.4px;
+        border-radius: 5px;
+      }
+
+      .action-btn {
+        margin: 10px 5px 0 0;
+        background-color: rgb(0, 123, 255);
+        border-width: 0;
+        padding: 12px 20px;
+        color: white;
+        border-radius: 5px;
+      }
+
+      .hide-pwd-btn {
+        margin: 10px;
+      }
+
+      .title {
+        font-size: 15pt;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      function App(){
+        const [showPassword, setShowPassword] = React.useState(true);
+
+        function togglePassword(){
+          setShowPassword(!showPassword)
+        }
+
+        return (
+          <>
+            <p className="title">Hello, welcome to my website</p>
+            <div>
+              <input 
+                className="email-btn" 
+                type="text" 
+                placeholder="Email" 
+              />
+            </div>
+            <div>
+              <input 
+                className="pwd-btn" 
+                type={
+                  showPassword 
+                  ? "text" 
+                  : "password"
+                } 
+                placeholder="Password" 
+              />
+              <button 
+                className="hide-pwd-btn"
+                onClick={togglePassword}
+              >
+                {
+                  showPassword 
+                  ? "Hide" 
+                  : "Show"
+                } 
+              </button>
+            </div>
+            <button className="action-btn">Login</button>
+            <button className="action-btn">Sign up</button>
+          </>
+        )
+      }
+
+      const container = document.querySelector('.js-container');
+      const root = ReactDOM.createRoot(container);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
