@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot</title>
+    <style>
+      body {
+        font-family: Arial;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      .send-button {
+        background-color: rgb(25, 135, 84);
+        color: white;
+        padding: 12px 20px;
+        margin-left: 10px;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      .chat-input {
+        padding: 12px 15px;
+        border-radius: 10px;
+        border-width: 1px;
+        font-size: 15px;
+
+        flex-grow: 1;
+      }
+
+      .chat-input-container {
+        display: flex;
+        margin-bottom: 60px;
+      }
+
+      .app-container {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-message-user {
+        display: flex;
+        justify-content: end;
+        align-items: start;
+      }
+
+      .chat-message-robot {
+        display: flex;
+        justify-content: start;
+        align-items: start;
+      }
+
+      .chat-message-text {
+        background-color: rgb(238, 238, 238);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 20px;
+        max-width: 300px;
+      }
+
+      .chat-message-profile {
+        width: 45px;
+      }
+
+      .chat-messages-container {
+        flex-grow: 1;
+        margin-top: 20px;
+        overflow: scroll;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      function ChatInput({chatMessages, setChatMessages}){
+        /*
+          Hooks -> let us insert React features into Component
+          Usually starts with "use", such as useState, useEffect, useContext, etc.
+
+          React.useState() is a hook
+          There are other hooks, such as React.useEffect(), React.useContext(), etc.
+        */
+        const [inputText, setInputText] = React.useState('');
+        const [isLoading, setIsLoading] = React.useState(false);
+
+        function saveInputText(event){
+          setInputText(event.target.value)
+        };
+
+        async function sendMessage(){
+          if (isLoading || inputText === ''){
+              return
+          };
+          const newChatMessages = [
+            ...chatMessages,
+            {
+              message: inputText,
+              sender: 'user',
+              id: crypto.randomUUID()
+            }
+          ];
+          setChatMessages(newChatMessages);
+          setInputText('');
+
+          setChatMessages([
+            ...newChatMessages,
+            {
+              message: 'Loading...',
+              sender: 'robot',
+              id: crypto.randomUUID()
+            }
+          ]);
+          setIsLoading(true);
+
+          const response = await Chatbot.getResponseAsync(
+            inputText
+          );
+
+          setChatMessages([
+            ...newChatMessages,
+            {
+              message: response,
+              sender: 'robot',
+              id: crypto.randomUUID()
+            }
+          ]);
+          setIsLoading(false);
+        }
+
+        function actionKeyPressed(event){
+          if (event.key === 'Enter'){
+            sendMessage()
+          } else if (event.key === 'Escape'){
+            setInputText('')
+          }
+        }
+
+        /*
+          In HTML, we can set a class for the CSS to select using the "class" attribute
+          However, React is basically a JS code, and "class" is reserved in JS
+          Therefore, "className" is used instead in React
+        */
+        return (
+          <div className="chat-input-container">
+            <input 
+              placeholder="Send a message to Chatbot" 
+              size="30" 
+              onChange={saveInputText}
+              onKeyDown={actionKeyPressed}
+              value={inputText}
+              className = "chat-input"
+            />
+            <button
+              onClick = {sendMessage}
+              className = "send-button"
+            >Send</button>
+          </div>
+        );
+      };
+
+      function ChatMessage({message, sender}){
+        return (
+          <div className={
+            sender === 'user' 
+            ? 'chat-message-user' 
+            : 'chat-message-robot'
+          }>
+            {sender === 'robot' && (
+              <img src="./robot.png"
+              className="chat-message-profile" />
+            )}
+            <div className="chat-message-text">
+              {message}
+            </div>
+            {sender === 'user' && (
+              <img src="./user.png"
+              className="chat-message-profile" />
+            )}
+          </div>
+        );
+      };
+
+      function ChatMessages({chatMessages}){
+        /*
+          Hooks should be at the top of the Component
+          And it shouldn't be inside anything (if statements, functions, etc)
+
+          React.useEffect() -> let us run some code after the Component is created/updated
+          We can insert an array as the second parameter of .useEffect()
+          The array (called Dependency Array) will control when the function runs
+          [] -> Only run once: after the Component is created
+          [chatMessages] -> Will also run after `chatMessages` is updated
+
+          Best practice is give .useEffect() a dependency array to avoid the code running too often
+        */
+
+        /*
+          .useRef() -> let us create a reference (ref) to an element in the Component
+          ref -> a container with special React features
+          One of the special features is we can give this container/ref to React, and React can automatically save
+          ..an HTML element inside this ref/container
+          This allows us to automatically save an HTML element from the component
+        
+          We do this by giving the ref to an element using the "ref" attribute
+          Example: <div ref={chatMessagesRef}></div>
+          After that, React will automatically save the HTML element into chatMessagesRef.current
+          We can then use chatMessagesRef.current to access the HTML element
+        */
+        const chatMessagesRef = React.useRef(null); // initial value is null (meaning no element yet)
+        React.useEffect(() => {
+          const containerElem = chatMessagesRef.current
+          // We use .useEffect() since we can only access the element after it is created
+          // Next, a good idea is to check if the element actually exists before we scroll it
+          if (containerElem){
+            // .scrollTop -> controls how far the element is scrolled from the top
+            // .scrollHeight -> total height of the element including the non-visible part
+            // Therefore, setting .scrollTop to .scrollHeight will scroll to the bottom
+            containerElem.scrollTop = containerElem.scrollHeight;
+          }
+        }, [chatMessages]);
+
+        return(
+          <div 
+            className="chat-messages-container"
+            ref={chatMessagesRef}
+          >
+            {chatMessages.map((chatMessage) => {
+                return(
+                  <ChatMessage 
+                    message={chatMessage.message}
+                    sender={chatMessage.sender}
+                    key={chatMessage.id}
+                  />
+                );
+              })
+            }
+          </div>
+        );
+      };
+
+      function App(){
+        const [chatMessages, setChatMessages] = React.useState(
+          [{
+          message: 'Hello Chatbot',
+          sender: 'user',
+          id: 'id1'
+          }, {
+            message: "Hello! How can I help you?",
+            sender: "robot",
+            id: 'id2'
+          }, {
+            message: 'Can you get me todays date?',
+            sender: 'user',
+            id: 'id3'
+          }, {
+            message: "Today is December 9",
+            sender: "robot",
+            id: 'id4'
+          }]
+        );
+
+        return (
+          <div className="app-container">
+            <ChatMessages 
+            chatMessages = {chatMessages}
+            />
+            <ChatInput 
+              chatMessages = {chatMessages}
+              setChatMessages = {setChatMessages}
+            />
+          </div>
+        );
+      };
+
+      const container = document.querySelector('.js-container');
+      const root = ReactDOM.createRoot(container);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
