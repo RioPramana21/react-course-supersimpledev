@@ -22,50 +22,51 @@
         };
 
         async function sendMessage(){
-          if (!isLoading && inputText !== ''){
-              const newChatMessages = [
-                ...chatMessages,
-                {
-                  message: inputText,
-                  sender: 'user',
-                  id: crypto.randomUUID()
-                }
-              ];
-              setChatMessages(newChatMessages);
-              setInputText('');
-              /*
-              3k. In the real world, the Chatbot does not respond immediately, it takes some time to think, and then respond (see the final Chatbot project). We'll learn how to handle this situation.
-              Change Chatbot.getResponse to Chatbot.getResponseAsync (for this function, the Chatbot thinks for a second, and then responds).
-              Chatbot.getResponseAsync returns a promise (promise = a value that is not available yet, but will be available in the future).
-              Add await in front of Chatbot.getResponseAsync to wait for it to finish (wait for the value to be available before continuing).
-              Add async in front of function sendMessage() (because we can only use await inside an async function).
-              As a review, this is a JavaScript feature called async / await
-              */
-              setChatMessages([
-                ...newChatMessages,
-                {
-                  message: 'Loading...',
-                  sender: 'robot',
-                  id: crypto.randomUUID()
-                }
-              ]);
-              setIsLoading(true);
-    
-              const response = await Chatbot.getResponseAsync(
-                inputText
-              );
-    
-              setChatMessages([
-                ...newChatMessages,
-                {
-                  message: response,
-                  sender: 'robot',
-                  id: crypto.randomUUID()
-                }
-              ]);
-            };
-            setIsLoading(false);
-          }
+          if (isLoading || inputText === ''){
+              return
+          };
+          const newChatMessages = [
+            ...chatMessages,
+            {
+              message: inputText,
+              sender: 'user',
+              id: crypto.randomUUID()
+            }
+          ];
+          setChatMessages(newChatMessages);
+          setInputText('');
+          /*
+          3k. In the real world, the Chatbot does not respond immediately, it takes some time to think, and then respond (see the final Chatbot project). We'll learn how to handle this situation.
+          Change Chatbot.getResponse to Chatbot.getResponseAsync (for this function, the Chatbot thinks for a second, and then responds).
+          Chatbot.getResponseAsync returns a promise (promise = a value that is not available yet, but will be available in the future).
+          Add await in front of Chatbot.getResponseAsync to wait for it to finish (wait for the value to be available before continuing).
+          Add async in front of function sendMessage() (because we can only use await inside an async function).
+          As a review, this is a JavaScript feature called async / await
+          */
+          setChatMessages([
+            ...newChatMessages,
+            {
+              message: 'Loading...',
+              sender: 'robot',
+              id: crypto.randomUUID()
+            }
+          ]);
+          setIsLoading(true);
+
+          const response = await Chatbot.getResponseAsync(
+            inputText
+          );
+
+          setChatMessages([
+            ...newChatMessages,
+            {
+              message: response,
+              sender: 'robot',
+              id: crypto.randomUUID()
+            }
+          ]);
+          setIsLoading(false);
+        }
 
         /*
           If we want to send the message when the user hits 'Enter'
