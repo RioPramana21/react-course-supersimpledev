@@ -2,6 +2,28 @@
 <html>
   <head>
     <title>React Basics</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      button {
+        background-color: rgb(25,135,84);
+        color: white;
+        margin: 0 5px;
+        border-width: 0px;
+        border-radius: 5px;
+        padding: 15px;
+      }
+
+      .btn-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: rgb(222, 222, 222);
+      }
+    </style>
   </head>
   <body>
     <div class="js-container"></div>
@@ -11,6 +33,39 @@
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
+      function App(){
+        const [counter, setCounter] = React.useState(0);
+        const counterRef = React.useRef(null);
+
+        function incrementCounter(){
+          setCounter(counter + 1)
+        }
+
+        function resetCounter(){
+          setCounter(0)
+        }
+
+        function autoClick(){
+          const buttonElem = counterRef.current
+          setInterval(()=>{
+            buttonElem.click()
+          }, 1000)
+        }
+
+        return (
+          <div className="btn-container">
+            <button
+              onClick={incrementCounter}
+              ref={counterRef}
+            >
+              Clicked {counter} {counter <= 1 ? 'time' : 'times'}
+            </button>
+            <button onClick={resetCounter}>Reset</button>
+            <button onClick={autoClick}>Auto Click</button>
+          </div>
+        )
+      }
+
       const container = document.querySelector('.js-container');
       const root = ReactDOM.createRoot(container);
       root.render(<App />);
