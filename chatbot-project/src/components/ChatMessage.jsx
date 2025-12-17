@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import './ChatMessage.css';
 /* Notice how we are not using { }, but giving it a name instead
 This is called a Default Export 
@@ -6,9 +7,9 @@ So, `RobotProfileImage` will contain 'src/assets/robot.png' which we can pass to
 the src attribute in an img element
 */
 import RobotProfileImage from '../assets/robot.png';
-import UserProfileImage from '../assets/user.png';
+import UserProfileImage from '../assets/profile-1.jpg';
 
-export function ChatMessage({ message, sender }) {
+export function ChatMessage({ message, sender, sent_timestamp }) {
   return (
     <div
       className={sender === "user" ? "chat-message-user" : "chat-message-robot"}
@@ -16,7 +17,12 @@ export function ChatMessage({ message, sender }) {
       {sender === "robot" && (
         <img src={RobotProfileImage} className="chat-message-profile" />
       )}
-      <div className="chat-message-text">{message}</div>
+      <div className="chat-message-text">
+        {message}
+        <div className="message-time">
+          {dayjs(sent_timestamp).format('h:mma')}
+        </div>
+      </div>
       {sender === "user" && (
         <img src={UserProfileImage} className="chat-message-profile" />
       )}

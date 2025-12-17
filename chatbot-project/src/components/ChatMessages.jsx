@@ -26,6 +26,7 @@ function ChatMessages({ chatMessages }) {
             message={chatMessage.message}
             sender={chatMessage.sender}
             key={chatMessage.id}
+            sent_timestamp={chatMessage.sent_timestamp}
           />
         );
       })}
