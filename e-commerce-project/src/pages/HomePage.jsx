@@ -3,6 +3,70 @@ import { products } from "../../starting-code/data/products";
 import "./HomePage.css";
 
 export function HomePage() {
+  /*
+    In a real-world application, we would fetch products from a Backend API like below
+    We can use `fetch()` provided by JS to make network requests to our backend server
+    Inside the fetch, we would provide the URL to our backend API endpoint
+    e.g. 'http://localhost:3000/api/products' for local development
+    It's important to use 'http://' or 'https://' in the URL to avoid issues with CORS and mixed content
+  
+    However, we can't store fetch() in a variable since the function doesn't actually finish right away
+    It takes some time for the function to run and return a result
+    This is called asynchronous code
+
+    So, how do we handle this?
+    fetch() returns a Promise which represents a value that may be available now, or in the future, or never
+    We can use .then() method on the Promise to specify what to do when the Promise resolves (i.e. when the data is available)
+    How it works is fetch() will make the network request in the background, and while waiting for the response, the rest of the code can continue running
+    At some point in time, fetch() will get the response from the server and the Promise will resolve
+    The .then() method will then be called with the resolved value (i.e. the response data)
+    This way, we can handle asynchronous operations without blocking the main thread of execution
+    
+    We can put a function inside .then() that will run when the data is ready
+    When fetch() is done running, it will save the result in the parameter we provide to .then(), called `response` below
+    We can then use this `response` object to get the actual data we want
+    
+    Note that fetch() only gets the response metadata by default, to get the actual data, we need to call response.json() which also returns a Promise
+    The .json() method reads the response stream to completion and parses it as JSON
+    It gives us the data attached to the response, and it's also asynchronous
+    So we need to chain another .then() to handle the data once response.json() is done
+  */
+  // fetch('http://localhost:3000/api/products')
+  //   .then((response) => {
+  //     // console.log("Fetch response:", response);
+  //     response.json().then((data) => {
+  //       console.log(data)
+  //     })
+  //   })
+
+  /*
+    A shortcut we can use to avoid nested .then() is to return the response.json() from the first .then()
+    The next .then() can be put outside the first one, which will wait for the previous Promise to resolve before running
+    The second one will get the actual data directly as its parameter
+  */
+  fetch("http://localhost:3000/api/products")
+    .then((response) => {
+      // console.log("Fetch response:", response);
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+    });
+
+    /*
+      Note that the backend & frontend can run in the same computer
+      In this project, the backend is running on localhost:3000, while the frontend dev server runs on localhost:5173 by default
+      When the frontend makes a request to the backend, it uses the full URL including the hostname and port
+      Since localhost is our own computer, the frontend is essentially talking to the same machine to get the data from the backend
+      This is done during development since it is easier to run both servers locally
+
+      However, when we deploy the app to production, both the frontend and backend will be put in different computers (i.e. servers)
+      The frontend will be hosted on a web server (e.g. Vercel, Netlify) which serves the static files (HTML, CSS, JS)
+      The backend will be hosted on a different server (e.g. AWS, Heroku) which runs the backend application and exposes the API endpoints
+      In this case, the frontend will make requests to the backend using the backend server's URL (e.g. https://api.my-ecommerce-site.com)
+      This way, the frontend and backend can communicate over the internet even though they are hosted on different machines
+    */
+
   return (
     <>
       <title>E-commerce Project</title>
