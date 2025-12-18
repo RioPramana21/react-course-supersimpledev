@@ -1,4 +1,6 @@
 import { Route, Routes } from "react-router";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { HomePage } from "./pages/HomePage";
 import { CheckoutPage } from "./pages/checkout/CheckoutPage";
 import { OrdersPage } from "./pages/OrdersPage";
@@ -7,6 +9,12 @@ import { PageNotFound } from "./pages/PageNotFound";
 import "./App.css";
 
 function App() {
+  const [cart, setCart] = useState([]);
+  useEffect(() => {
+    axios.get("/api/cart-items").then((response) => {
+      setCart(response.data);
+    });
+  }, []); // The empty dependency array ensures this effect only runs once when the component mounts
   /* 
     To add routes into our app, we need to use the Routes component
     Inside it, we add a Route component for each page/path we have
@@ -17,8 +25,8 @@ function App() {
   */
   return (
     <Routes>
-      <Route index element={<HomePage />} />
-      <Route path="checkout" element={<CheckoutPage />} />
+      <Route index element={<HomePage cart={cart} />} />
+      <Route path="checkout" element={<CheckoutPage cart={cart} />} />
       <Route path="orders" element={<OrdersPage />} />
       <Route path="tracking" element={<TrackingPage />} />
       <Route path="*" element={<PageNotFound />} />

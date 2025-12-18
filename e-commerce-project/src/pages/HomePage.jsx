@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import "./HomePage.css";
 
-export function HomePage() {
+export function HomePage({ cart }) {
   /*
     In a real-world application, we would fetch products from a Backend API like below
     We can use `fetch()` provided by JS to make network requests to our backend server
@@ -100,8 +100,15 @@ export function HomePage() {
      In production mode, the effect will only run once as expected
       */
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
-  
+
+  /**
+   * Since the cart is needed in both HomePage and CheckoutPage,
+   * we need to lift the state up to a common ancestor component
+   * In this case, we can lift the cart state up to App.jsx
+   * This is because we want to only get the cart once and share it across multiple pages
+   */
+  // const [cart, setCart] = useState([]);
+
   useEffect(() => {
     /**
      * Instead of writing 'http://localhost:3000' every time,
@@ -112,9 +119,9 @@ export function HomePage() {
     });
 
     // Get the cart data to show the number of items in the Cart icon
-    axios.get('/api/cart-items').then((response) => {
-      setCart(response.data)
-    })
+    // axios.get('/api/cart-items').then((response) => {
+    //   setCart(response.data)
+    // })
   }, []); // The empty dependency array ensures this effect only runs once when the component mounts
 
   return (
