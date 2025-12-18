@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { NavLink } from 'react-router';
 import './header.css'
 
 /*
@@ -11,6 +11,15 @@ import './header.css'
     It uses JavaScript to dynamically update the URL and display the correct component without reloading the page
 */
 
+/*
+  Another special component is NavLink which is similar to Link but it also allows us to apply special styling to the active link
+  For example, we can highlight the current page's link in the header navigation
+  NavLink automatically applies an "active" class to the link when its target route is active
+  e.g. <className="orders-link ... active">
+  We can use this class in our CSS to style the active link differently
+  e.g. .orders-link.active { font-weight: bold; }
+*/
+
 export function Header() {
   return (
     <div className="header">
@@ -18,10 +27,10 @@ export function Header() {
         {/* 
             To change <a> to a Link, we need to replace the tag name and use the `to` prop instead of `href`
         */}
-        <Link to="/" className="header-link">
+        <NavLink to="/" className="header-link">
           <img className="logo" src="images/logo-white.png" />
           <img className="mobile-logo" src="images/mobile-logo-white.png" />
-        </Link>
+        </NavLink>
       </div>
 
       <div className="middle-section">
@@ -33,15 +42,15 @@ export function Header() {
       </div>
 
       <div className="right-section">
-        <Link className="orders-link header-link" to="/orders">
+        <NavLink className="orders-link header-link" to="/orders">
           <span className="orders-text">Orders</span>
-        </Link>
+        </NavLink>
 
-        <Link className="cart-link header-link" to="/checkout">
+        <NavLink className="cart-link header-link" to="/checkout">
           <img className="cart-icon" src="images/icons/cart-icon.png" />
           <div className="cart-quantity">3</div>
           <div className="cart-text">Cart</div>
-        </Link>
+        </NavLink>
       </div>
     </div>
   );
