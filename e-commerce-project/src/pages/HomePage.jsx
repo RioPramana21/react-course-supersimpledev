@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
-import { products } from "../../starting-code/data/products";
 import "./HomePage.css";
 
 export function HomePage() {
@@ -54,7 +54,7 @@ export function HomePage() {
   //     console.log(data);
   //   });
 
-    /*
+  /*
       Note that the backend & frontend can run in the same computer
       In this project, the backend is running on localhost:3000, while the frontend dev server runs on localhost:5173 by default
       When the frontend makes a request to the backend, it uses the full URL including the hostname and port
@@ -68,7 +68,7 @@ export function HomePage() {
       This way, the frontend and backend can communicate over the internet even though they are hosted on different machines
     */
 
-    /*
+  /*
       Fetch does the job, but it is a bit harder to read with all the .then() chaining
       To solve this, we can use axios library which is a popular HTTP client for making requests
       It provides a simpler and cleaner API for making HTTP requests compared to fetch()
@@ -78,11 +78,34 @@ export function HomePage() {
       We can import axios by typing `import axios from 'axios'` at the top of the file
       Then, we can use axios.get() to make a GET request to the backend API
     */
-    axios.get('http://localhost:3000/api/products')
-      .then((response) => {
-        // Unlike fetch(), the data will be saved directly in response.data
-        console.log(response.data)
-      })
+  // axios.get('http://localhost:3000/api/products')
+  //   .then((response) => {
+  //     // Unlike fetch(), the data will be saved directly in response.data
+  //     console.log(response.data)
+  //   })
+
+  /**
+     Since we are calling axios inside a React component, we need to be careful about when the request is made
+      If we call axios directly in the component body, it will run on every render which can lead to infinite loops and performance issues
+      To avoid this, we can use the useEffect() hook provided by React
+      By default, useEffect() runs every time the component is created/updated (i.e. on every render)
+      But we can provide a second parameter, called the dependency array, to control when the effect runs
+      If we provide an empty array, the effect will only run once when the component is first mounted
+      This is similar to componentDidMount() in class components
+      This is the perfect place to put our axios request since we only want to fetch the products once when the HomePage component is loaded
+     
+     Note: You might notice that in the console, the axios request is made twice
+     This is because React's Strict Mode intentionally double-invokes certain lifecycle methods and effects to help identify potential issues
+     But this is only in development mode for debugging purposes
+     In production mode, the effect will only run once as expected
+      */
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/products").then((response) => {
+      setProducts(response.data);
+    });
+  }, []); // The empty dependency array ensures this effect only runs once when the component mounts
 
   return (
     <>
