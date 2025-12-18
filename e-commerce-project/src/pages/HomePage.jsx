@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Header } from "../components/Header";
 import { products } from "../../starting-code/data/products";
 import "./HomePage.css";
@@ -44,14 +45,14 @@ export function HomePage() {
     The next .then() can be put outside the first one, which will wait for the previous Promise to resolve before running
     The second one will get the actual data directly as its parameter
   */
-  fetch("http://localhost:3000/api/products")
-    .then((response) => {
-      // console.log("Fetch response:", response);
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-    });
+  // fetch("http://localhost:3000/api/products")
+  //   .then((response) => {
+  //     // console.log("Fetch response:", response);
+  //     return response.json();
+  //   })
+  //   .then((data) => {
+  //     console.log(data);
+  //   });
 
     /*
       Note that the backend & frontend can run in the same computer
@@ -66,6 +67,22 @@ export function HomePage() {
       In this case, the frontend will make requests to the backend using the backend server's URL (e.g. https://api.my-ecommerce-site.com)
       This way, the frontend and backend can communicate over the internet even though they are hosted on different machines
     */
+
+    /*
+      Fetch does the job, but it is a bit harder to read with all the .then() chaining
+      To solve this, we can use axios library which is a popular HTTP client for making requests
+      It provides a simpler and cleaner API for making HTTP requests compared to fetch()
+      Axios automatically parses JSON responses, so we don't need to call response.json() separately
+      It also supports features like request cancellation, interceptors, and automatic transformation of request and response data
+
+      We can import axios by typing `import axios from 'axios'` at the top of the file
+      Then, we can use axios.get() to make a GET request to the backend API
+    */
+    axios.get('http://localhost:3000/api/products')
+      .then((response) => {
+        // Unlike fetch(), the data will be saved directly in response.data
+        console.log(response.data)
+      })
 
   return (
     <>
