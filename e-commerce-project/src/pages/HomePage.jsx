@@ -5,6 +5,11 @@ export function HomePage() {
   return (
     <>
       <title>E-commerce Project</title>
+      {/* 
+        We can set a unique favicon for each page like the title above
+        Using link tag with rel="icon" and href to the icon image
+      */}
+      <link rel="icon" type="image/svg+xml" href="/images/icons/home-favicon.png" />
 
       <Header />
 

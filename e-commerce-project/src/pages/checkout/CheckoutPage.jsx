@@ -9,6 +9,7 @@ export function CheckoutPage() {
         To give each page its own title, we can simply put the title tag at the top of the display
     */}
       <title>Checkout</title>
+      <link rel="icon" type="image/svg+xml" href="/images/icons/cart-favicon.png" />
 
       <CheckoutHeader />
 
