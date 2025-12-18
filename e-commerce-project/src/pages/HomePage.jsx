@@ -101,14 +101,18 @@ export function HomePage() {
       */
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-
+  
   useEffect(() => {
-    axios.get("http://localhost:3000/api/products").then((response) => {
+    /**
+     * Instead of writing 'http://localhost:3000' every time,
+     * we can actually use a shortcut in Vite by putting it in `vite.config.js` file
+     */
+    axios.get("/api/products").then((response) => {
       setProducts(response.data);
     });
 
     // Get the cart data to show the number of items in the Cart icon
-    axios.get('http://localhost:3000/api/cart-items').then((response) => {
+    axios.get('/api/cart-items').then((response) => {
       setCart(response.data)
     })
   }, []); // The empty dependency array ensures this effect only runs once when the component mounts
