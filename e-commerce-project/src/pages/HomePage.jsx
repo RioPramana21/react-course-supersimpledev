@@ -100,11 +100,17 @@ export function HomePage() {
      In production mode, the effect will only run once as expected
       */
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     axios.get("http://localhost:3000/api/products").then((response) => {
       setProducts(response.data);
     });
+
+    // Get the cart data to show the number of items in the Cart icon
+    axios.get('http://localhost:3000/api/cart-items').then((response) => {
+      setCart(response.data)
+    })
   }, []); // The empty dependency array ensures this effect only runs once when the component mounts
 
   return (
@@ -120,7 +126,8 @@ export function HomePage() {
         href="/images/icons/home-favicon.png"
       />
 
-      <Header />
+      {/* The cart icon is in the Header, so we pass the cart data as a prop to it */}
+      <Header cart={cart} />
 
       <div className="home-page">
         <div className="products-grid">
