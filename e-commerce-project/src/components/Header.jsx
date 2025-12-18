@@ -1,5 +1,9 @@
 import { NavLink } from 'react-router';
 import './header.css'
+import LogoWhite from '../assets/images/logo-white.png'
+import MobileLogoWhite from '../assets/images/mobile-logo-white.png'
+import SearchIcon from '../assets/images/icons/search-icon.png'
+import CartIcon from '../assets/images/icons/cart-icon.png'
 
 /*
     If you notice, even though switching pages work, it still reloads the entire page
@@ -28,8 +32,8 @@ export function Header() {
             To change <a> to a Link, we need to replace the tag name and use the `to` prop instead of `href`
         */}
         <NavLink to="/" className="header-link">
-          <img className="logo" src="images/logo-white.png" />
-          <img className="mobile-logo" src="images/mobile-logo-white.png" />
+          <img className="logo" src={LogoWhite} />
+          <img className="mobile-logo" src={MobileLogoWhite} />
         </NavLink>
       </div>
 
@@ -37,7 +41,7 @@ export function Header() {
         <input className="search-bar" type="text" placeholder="Search" />
 
         <button className="search-button">
-          <img className="search-icon" src="images/icons/search-icon.png" />
+          <img className="search-icon" src={SearchIcon} />
         </button>
       </div>
 
@@ -47,7 +51,7 @@ export function Header() {
         </NavLink>
 
         <NavLink className="cart-link header-link" to="/checkout">
-          <img className="cart-icon" src="images/icons/cart-icon.png" />
+          <img className="cart-icon" src={CartIcon} />
           <div className="cart-quantity">3</div>
           <div className="cart-text">Cart</div>
         </NavLink>
