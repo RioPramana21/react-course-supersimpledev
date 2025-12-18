@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
+import { formatMoney } from "../utils/money";
 import "./HomePage.css";
 
 export function HomePage({ cart }) {
@@ -166,7 +167,24 @@ export function HomePage({ cart }) {
                 </div>
 
                 <div className="product-price">
-                  ${(product.priceCents / 100).toFixed(2)}
+                  {/* 
+                    Since price is in cents, we need to divide by 100 to get dollars
+                    Then, we can use toFixed(2) to show 2 decimal places
+                    We usually store price in Cents because it avoids floating point precision issues
+                    e.g. 0.1 + 0.2 !== 0.3 in JS due to how floating point numbers are represented in binary
+
+                    Also, since this price will be displayed in multiple pages, it's better to put it in a function
+                    that we can reuse everywhere instead of repeating the same code
+
+                    To structure it better, we'll create a `utils` folder to put utility functions like this one under `src/utils/money.js`
+                    Other structure notes:
+                    1. Create a `components` folder under `src/` to put reusable components (e.g. Header, Footer, ProductCard, etc.)
+                    2. Create a `pages` folder under `src/` to put page components (e.g. HomePage, CheckoutPage, OrdersPage, etc.)
+                    3. Create a `assets` folder under `src/` to put static assets (e.g. images, icons, fonts, etc.)
+                    4. Create a `checkout` folder under `src/pages/` to put checkout-related pages and components since checkout have multiple components/pages
+                  */}
+                  {/* ${(product.priceCents / 100).toFixed(2)} */}
+                  {formatMoney(product.priceCents)}
                 </div>
 
                 <div className="product-quantity-container">
