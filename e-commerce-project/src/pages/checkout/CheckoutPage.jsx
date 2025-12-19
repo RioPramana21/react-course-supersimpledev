@@ -138,6 +138,40 @@ export function CheckoutPage({ cart }) {
                             )} - Shipping`;
                           }
 
+                          /**
+                         * REACT RENDERING LOGIC & FRAGMENTS EXPLAINED:
+                         * * 1. Why .map() works without Fragments:
+                         * - The .map() function returns a single JavaScript Array (e.g., [Element1, Element2]).
+                         * - Since an Array is a "single object" in JavaScript, it is a valid return value.
+                         * - React knows how to automatically iterate through an array and render each item.
+                         * * 2. Why siblings (Element A, Element B) fail in conditions:
+                         * - JavaScript functions/expressions can only return ONE value.
+                         * - Writing `condition && ( <DivA /> <DivB /> )` is syntax error.
+                         * - It is equivalent to writing `return 1 5;` without a comma or container—the computer gets confused.
+                         * * 3. The Solution (Fragments <>...</>):
+                         * - Fragments group multiple siblings into a single "Parent Node" (React.Fragment).
+                         * - This satisfies the "Return One Value" rule without adding an extra <div> to the DOM.
+                         * * NOTE: Even inside .map(), each *iteration* must return one root element. 
+                         * If a loop item has siblings, they must also be wrapped in a <Fragment key={id}>.
+                         * Example:
+                         * ❌ This will CRASH inside .map() too!
+                          {cart.map(item => {
+                              return (
+                                  <div>Title</div>
+                                  <div>Price</div> // Error: Adjacent JSX elements must be wrapped
+                              )
+                          })}
+                          ✅ Valid
+                          {cart.map(item => {
+                              return (
+                                  <React.Fragment key={item.id}>
+                                      <div>Title</div>
+                                      <div>Price</div>
+                                  </React.Fragment>
+                              )
+                          })}
+                         */
+
                           return (
                             <div
                               key={deliveryOption.id}
