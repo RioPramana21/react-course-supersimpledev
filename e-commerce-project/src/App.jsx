@@ -56,7 +56,15 @@ function App() {
       <Route index element={<HomePage cart={cart} />} />
       <Route path="checkout" element={<CheckoutPage cart={cart} />} />
       <Route path="orders" element={<OrdersPage cart={cart} />} />
-      <Route path="tracking" element={<TrackingPage />} />
+      {/* 
+        :orderId & :productId are called URL params (parameters)
+        Both are placeholders for actual values (any text)
+        It allows us to save the order id and product id in the URL
+        They are dynamic segments in the URL that can change based on the specific order and product being viewed
+        In this case, they allow us to view tracking information for different orders and products using the same route structure
+        We can access these params in the TrackingPage component using the useParams hook from react-router
+      */}
+      <Route path="tracking/:orderId/:productId" element={<TrackingPage cart={cart} />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
