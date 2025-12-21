@@ -64,8 +64,11 @@ function App() {
         In this case, they allow us to view tracking information for different orders and products using the same route structure
         We can access these params in the TrackingPage component using the useParams hook from react-router
       */}
-      <Route path="tracking/:orderId/:productId" element={<TrackingPage cart={cart} />} />
-      <Route path="*" element={<PageNotFound />} />
+      <Route
+        path="tracking/:orderId/:productId"
+        element={<TrackingPage cart={cart} />}
+      />
+      <Route path="*" element={<PageNotFound cart={cart} />} />
     </Routes>
   );
 }
