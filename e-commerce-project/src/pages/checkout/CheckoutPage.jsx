@@ -13,22 +13,37 @@ export function CheckoutPage({ cart }) {
   // And it's easier to check if it exists using null
   const [paymentSummary, setPaymentSummary] = useState(null);
 
-  useEffect(() => {
-    /**
-     * In the frontend, we need to display the estimated delivery time
-     * However, calculations & data management are usually done on the backend
-     * In this project, we can use `expand` again which will return
-     * the estimated delivery time in miliseconds
-     */
-    axios
-      .get("/api/delivery-options?expand=estimatedDeliveryTime")
-      .then((response) => {
-        setDeliveryOptions(response.data);
-      });
+  // useEffect(() => {
+  //   /**
+  //    * In the frontend, we need to display the estimated delivery time
+  //    * However, calculations & data management are usually done on the backend
+  //    * In this project, we can use `expand` again which will return
+  //    * the estimated delivery time in miliseconds
+  //    */
+  //   axios
+  //     .get("/api/delivery-options?expand=estimatedDeliveryTime")
+  //     .then((response) => {
+  //       setDeliveryOptions(response.data);
+  //     });
 
-    axios.get("/api/payment-summary").then((response) => {
+  //   axios.get("/api/payment-summary").then((response) => {
+  //     setPaymentSummary(response.data);
+  //   });
+  // }, []);
+
+  // Check async await explanation in HomePage.jsx
+  useEffect(() => {
+    const fetchCheckoutData = async () => {
+      let response = await axios.get(
+        "/api/delivery-options?expand=estimatedDeliveryTime"
+      );
+      setDeliveryOptions(response.data);
+
+      response = await axios.get("/api/payment-summary");
       setPaymentSummary(response.data);
-    });
+    };
+
+    fetchCheckoutData();
   }, []);
 
   return (

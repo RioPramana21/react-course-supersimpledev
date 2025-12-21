@@ -125,6 +125,34 @@ export function HomePage({ cart }) {
     // })
   }, []); // The empty dependency array ensures this effect only runs once when the component mounts
 
+  /**
+   * But, actually in React, we want to use async await whenever possible because it's easier to read
+   * async await lets us write asynchronous code in a more synchronous style
+   * We can do so by writing `await` before axios which returns a Promise, and it let us store the result in a variable directly
+   * Then, we can use `async` keyword before the function to denote that the function contains asynchronous code
+   */
+  
+  // useEffect(async () => {
+  //   const response = await axios.get("/api/products");
+  //   setProducts(response.data);
+  // }, []);
+
+  useEffect(() => {
+    /**
+     * Note that we can't just put `async` before the useEffect callback directly
+     * This is because useEffect expects the callback to return either nothing or a cleanup function
+     * If we make the callback async, it will return a Promise instead which useEffect doesn't handle
+     * To solve this, we can create an inner async function and call it immediately
+     * This way, the outer useEffect callback remains synchronous
+     */
+    const fetchHomeData = async () => {
+      const response = await axios.get("/api/products");
+      setProducts(response.data);
+    }
+
+    fetchHomeData()
+  }, []);
+
   return (
     <>
       <title>E-commerce Project</title>
