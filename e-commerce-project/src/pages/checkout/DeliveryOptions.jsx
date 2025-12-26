@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import { formatMoney } from "../../utils/money";
+import axios from "axios";
 
-export function DeliveryOptions({ cartItem, deliveryOptions }) {
+export function DeliveryOptions({ cartItem, deliveryOptions, loadCart }) {
   return (
     <div className="delivery-options">
       <div className="delivery-options-title">Choose a delivery option:</div>
@@ -51,11 +52,31 @@ export function DeliveryOptions({ cartItem, deliveryOptions }) {
             })}
             */
 
+        const updateDeliveryOption = async () => {
+          await axios.put(`/api/cart-items/${cartItem.productId}`, {
+            deliveryOptionId: deliveryOption.id,
+          });
+          await loadCart();
+        };
+
         return (
-          <div key={deliveryOption.id} className="delivery-option">
+          <div
+            key={deliveryOption.id}
+            className="delivery-option"
+            onClick={updateDeliveryOption}
+          >
+            {/* 
+            If we look at the console, there will be a warning `checked` should have an onChange handler
+            This is because in React, when we use `checked` or `value` to set the value of an input element
+            It becomes a controlled component, meaning its value is controlled by React state
+            However, since we are not actually using the input element to change the value
+            (we are using the div's onClick to handle the change instead)
+            We can just provide an empty onChange handler to satisfy React's requirement
+            */}
             <input
               type="radio"
               checked={deliveryOption.id === cartItem.deliveryOptionId}
+              onChange={() => {}}
               className="delivery-option-input"
               name={`delivery-option-${cartItem.productId}`}
             />
