@@ -34,13 +34,31 @@ function App() {
   // }, []); // The empty dependency array ensures this effect only runs once when the component mounts
 
   // Check async await explanation in HomePage.jsx
-  useEffect(() => {
-    const fetchCartItemData = async () => {
-      const response = await axios.get("/api/cart-items?expand=product");
-      setCart(response.data);
-    };
+  // useEffect(() => {
+  //   const fetchCartItemData = async () => {
+  //     const response = await axios.get("/api/cart-items?expand=product");
+  //     setCart(response.data);
+  //   };
 
-    fetchCartItemData();
+  //   fetchCartItemData();
+  // }, []);
+
+  /**
+   * Now the problem is, when we add a new item to the cart, the cart state in App.jsx doesn't update
+   * This is because the POST request to add a new cart item is made in ProductsGrid.jsx
+   * and the cart state is managed in App.jsx
+   * To solve this, we can create a function in App.jsx to load the cart data
+   * Then, we can pass this function down to ProductsGrid.jsx via props
+   * So that after adding a new cart item, we can call this function to reload the cart data
+   * This way, the cart state in App.jsx will be updated with the latest data from the backend
+   */
+  const loadCart = async () => {
+    const response = await axios.get("/api/cart-items?expand=product");
+    setCart(response.data);
+  };
+
+  useEffect(() => {
+    loadCart();
   }, []);
 
   /* 
@@ -53,7 +71,7 @@ function App() {
   */
   return (
     <Routes>
-      <Route index element={<HomePage cart={cart} />} />
+      <Route index element={<HomePage cart={cart} loadCart={loadCart} />} />
       <Route path="checkout" element={<CheckoutPage cart={cart} />} />
       <Route path="orders" element={<OrdersPage cart={cart} />} />
       {/* 

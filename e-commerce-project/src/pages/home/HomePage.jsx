@@ -4,7 +4,7 @@ import { Header } from "../../components/Header";
 import { ProductsGrid } from "./ProductsGrid";
 import "./HomePage.css";
 
-export function HomePage({ cart }) {
+export function HomePage({ cart, loadCart }) {
   /*
     In a real-world application, we would fetch products from a Backend API like below
     We can use `fetch()` provided by JS to make network requests to our backend server
@@ -170,7 +170,7 @@ export function HomePage({ cart }) {
       <Header cart={cart} />
 
       <div className="home-page">
-        <ProductsGrid products={products} />
+        <ProductsGrid products={products} loadCart={loadCart} />
       </div>
     </>
   );
