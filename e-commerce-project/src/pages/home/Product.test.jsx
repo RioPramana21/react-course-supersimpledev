@@ -1,4 +1,4 @@
-import { it, expect, describe, vi } from "vitest";
+import { it, expect, describe, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 // render will renders a component in a fake web page (DOM) for testing purposes
 // screen lets us check what is rendered on the fake web page
@@ -10,6 +10,36 @@ import { Product } from "./Product";
 vi.mock("axios"); // Mock the axios module to prevent real API calls
 
 describe("Product component", () => {
+  /**
+   * Since the setup variables (mock product data and mock loadCart function)
+   * is used in multiple tests, we'd want to define them in an outer scope
+   * to avoid code duplication
+   *
+   * However, if any test modifies these variables, it will carry over and can affect other tests
+   * To avoid this, we can use beforeEach() hook provided by Vitest
+   * The function inside beforeEach() will run before each test case
+   * This way, we can reset the variables to their initial state before each test
+   */
+  let product;
+  let loadCart;
+
+  beforeEach(() => {
+    product = {
+      id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+      image: "images/products/athletic-cotton-socks-6-pairs.jpg",
+      name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
+      rating: {
+        stars: 4.5,
+        count: 87,
+      },
+      priceCents: 1090,
+      keywords: ["socks", "sports", "apparel"],
+    };
+
+    // This function doesn't do anything
+    loadCart = vi.fn(); // Mock function for loadCart prop
+  });
+
   /**
    * To test a function, we can just call the function and write the expected output
    * However, to test a React component, we need to render the component first
@@ -23,21 +53,6 @@ describe("Product component", () => {
    * such as vitest.config.js and setupTests.js
    */
   it("displays the product details correctly", () => {
-    const product = {
-      id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-      image: "images/products/athletic-cotton-socks-6-pairs.jpg",
-      name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
-      rating: {
-        stars: 4.5,
-        count: 87,
-      },
-      priceCents: 1090,
-      keywords: ["socks", "sports", "apparel"],
-    };
-
-    // This function doesn't do anything
-    const loadCart = vi.fn(); // Mock function for loadCart prop
-
     render(<Product product={product} loadCart={loadCart} />);
     /**
      * Since Product component needs props, we are providing a sample product object as props
@@ -85,21 +100,6 @@ describe("Product component", () => {
   //   We can also test user interactions
   // e.g. testing if Add to Cart button behaves correctly when clicked
   it("adds a product to the cart", async () => {
-    const product = {
-      id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-      image: "images/products/athletic-cotton-socks-6-pairs.jpg",
-      name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
-      rating: {
-        stars: 4.5,
-        count: 87,
-      },
-      priceCents: 1090,
-      keywords: ["socks", "sports", "apparel"],
-    };
-
-    // This function doesn't do anything
-    const loadCart = vi.fn(); // Mock function for loadCart prop
-
     render(<Product product={product} loadCart={loadCart} />);
 
     // Simulate user clicking the "Add to Cart" button
