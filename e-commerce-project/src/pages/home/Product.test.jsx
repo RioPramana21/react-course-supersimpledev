@@ -2,7 +2,12 @@ import { it, expect, describe, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 // render will renders a component in a fake web page (DOM) for testing purposes
 // screen lets us check what is rendered on the fake web page
+import userEvent from "@testing-library/user-event";
+// lets us simulates user events e.g. click a button
+import axios from "axios"; // This is the fake axios due to the mocking below
 import { Product } from "./Product";
+
+vi.mock("axios"); // Mock the axios module to prevent real API calls
 
 describe("Product component", () => {
   /**
@@ -75,5 +80,58 @@ describe("Product component", () => {
     );
 
     expect(screen.getByText("87")).toBeInTheDocument();
+  });
+
+  //   We can also test user interactions
+  // e.g. testing if Add to Cart button behaves correctly when clicked
+  it("adds a product to the cart", async () => {
+    const product = {
+      id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+      image: "images/products/athletic-cotton-socks-6-pairs.jpg",
+      name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
+      rating: {
+        stars: 4.5,
+        count: 87,
+      },
+      priceCents: 1090,
+      keywords: ["socks", "sports", "apparel"],
+    };
+
+    // This function doesn't do anything
+    const loadCart = vi.fn(); // Mock function for loadCart prop
+
+    render(<Product product={product} loadCart={loadCart} />);
+
+    // Simulate user clicking the "Add to Cart" button
+    const user = userEvent.setup();
+    const addToCartButton = screen.getByTestId("add-to-cart-button");
+    // user.click(...) returns a Promise, so we need to await it
+    await user.click(addToCartButton);
+    /**
+     * Notice that clicking the addToCartButton will call the addToCart function in Product component
+     * which makes an axios POST request to add the product to the cart in the backend
+     * However, we don't want to add an actual item to the cart in the real backend during tests
+     * To solve this, we have mocked the axios module at the top of this test file
+     * Therefore, when addToCart calls axios.post, it will call the mocked version instead of the real one, which will do nothing
+     * This prevents any real API calls from being made during tests
+     *
+     * Then, what can we test here?
+     * We can check:
+     * 1. The axios.post() is called
+     * 2. The data sent to axios.post() is correct
+     * 3. loadCart() is called to refresh the cart after adding the item
+     */
+
+    /**
+     * If we pass a mock function to expect(), we can use special matchers to check if the function was called
+     * e.g. toHaveBeenCalled(), toHaveBeenCalledWith()
+     * Here, we check if axios.post was called when the Add to Cart button was clicked
+     * and if it was called with the correct URL and data simultaneously
+     */
+    expect(axios.post).toHaveBeenCalledWith("/api/cart-items", {
+      productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+      quantity: 1,
+    });
+    expect(loadCart).toHaveBeenCalled();
   });
 });
