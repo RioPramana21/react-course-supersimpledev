@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export function CartItemDetails({ cartItem, loadCart }) {
   const [isUpdating, setIsUpdating] = useState(false);
-  const [quantity, setQuantity] = useState(cartItem.quantity)
+  const [quantity, setQuantity] = useState(cartItem.quantity);
 
   const deleteCartItem = async () => {
     await axios.delete(`/api/cart-items/${cartItem.productId}`);
@@ -12,19 +12,29 @@ export function CartItemDetails({ cartItem, loadCart }) {
   };
 
   const updateQuantity = async () => {
-    if (isUpdating){
+    if (isUpdating) {
       await axios.put(`api/cart-items/${cartItem.productId}`, {
-        quantity
-      })
-      await loadCart()
+        quantity,
+      });
+      await loadCart();
     }
     setIsUpdating(!isUpdating);
-  }
+  };
+
+  const checkQuantityEvent = (event) => {
+    const keyPressed = event.key;
+    if (keyPressed === "Enter") {
+      updateQuantity();
+    } else if (keyPressed === "Escape") {
+      setQuantity(cartItem.quantity);
+      setIsUpdating(false);
+    }
+  };
 
   const changeQuantity = (event) => {
-    const newQuantity = Number(event.target.value)
-    setQuantity(newQuantity)
-  }
+    const newQuantity = Number(event.target.value);
+    setQuantity(newQuantity);
+  };
 
   return (
     <>
@@ -45,6 +55,7 @@ export function CartItemDetails({ cartItem, loadCart }) {
                 style={{ width: 50 }}
                 value={quantity}
                 onChange={changeQuantity}
+                onKeyDown={checkQuantityEvent}
               />
             ) : (
               <span className="quantity-label">{cartItem.quantity}</span>
