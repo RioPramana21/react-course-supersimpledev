@@ -1,9 +1,11 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import "./header.css";
 import LogoWhite from "../assets/images/logo-white.png";
 import MobileLogoWhite from "../assets/images/mobile-logo-white.png";
 import SearchIcon from "../assets/images/icons/search-icon.png";
 import CartIcon from "../assets/images/icons/cart-icon.png";
+import { useState } from "react";
+import { useSearchParams } from "react-router";
 
 /*
     If you notice, even though switching pages work, it still reloads the entire page
@@ -25,12 +27,33 @@ import CartIcon from "../assets/images/icons/cart-icon.png";
 */
 
 export function Header({ cart }) {
+  const navigate = useNavigate();
+  /**
+   * We use useState to keep track of the search input value
+   * The initial value is either an empty string or the current search param from the URL if it exists
+   * We use useSearchParams to read the current URL search params
+   */
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+
+  const updateSearchInput = (event) => {
+    setSearch(event.target.value);
+  };
+
+  /**
+   * When the user clicks the search button, we navigate to the home page with the search query param
+   * This gives us a URL like "/?search=shoes" which enables us to filter the products on the home page
+   */
+  const searchProducts = () => {
+    navigate(`/?search=${search}`);
+  };
+
   // Show the correct # of items in cart
   let totalQuantity = 0;
   cart.forEach((cartItem) => {
     totalQuantity += cartItem.quantity;
   });
-  
+
   return (
     <div className="header">
       <div className="left-section">
@@ -44,9 +67,21 @@ export function Header({ cart }) {
       </div>
 
       <div className="middle-section">
-        <input className="search-bar" type="text" placeholder="Search" />
+        {/* 
+          To make the search bar functional, we need to add state to keep track of the input value
+          Then, we can add an onChange event handler to update the state when the user types
+          Finally, we can add an onClick event handler to the search button to navigate to the search results page
+          This is a controlled input pattern in React where the input value is controlled by React state
+        */}
+        <input
+          className="search-bar"
+          type="text"
+          placeholder="Search"
+          value={search}
+          onChange={updateSearchInput}
+        />
 
-        <button className="search-button">
+        <button className="search-button" onClick={searchProducts}>
           <img className="search-icon" src={SearchIcon} />
         </button>
       </div>

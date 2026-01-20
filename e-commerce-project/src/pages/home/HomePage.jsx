@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useSearchParams } from "react-router";
 import { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 import { ProductsGrid } from "./ProductsGrid";
@@ -137,6 +138,9 @@ export function HomePage({ cart, loadCart }) {
   //   setProducts(response.data);
   // }, []);
 
+  const [searchParams] = useSearchParams();
+  const search = searchParams.get('search')
+
   useEffect(() => {
     /**
      * Note that we can't just put `async` before the useEffect callback directly
@@ -146,12 +150,24 @@ export function HomePage({ cart, loadCart }) {
      * This way, the outer useEffect callback remains synchronous
      */
     const fetchHomeData = async () => {
-      const response = await axios.get("/api/products");
+      /**
+       * We can also use the search variable to filter products from the backend
+       * by passing it as a query param to the API endpoint
+       * e.g. /api/products?search=shoes
+       * Then, in the backend, we can read the search query param and filter the products accordingly
+       */
+      let response
+      if (search){
+        response = await axios.get(`/api/products?search=${search}`)
+      }
+      else{
+        response = await axios.get("/api/products");
+      }
       setProducts(response.data);
     }
 
     fetchHomeData()
-  }, []);
+  }, [search]); // The effect will run again whenever `search` changes
 
   return (
     <>
