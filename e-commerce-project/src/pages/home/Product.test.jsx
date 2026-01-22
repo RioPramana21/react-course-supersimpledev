@@ -136,10 +136,14 @@ describe("Product component", () => {
   });
 
   // Test if user can select a quantity
-  it("enables the user to select a quantity", () => {
+  it("enables the user to select a quantity", async () => {
     render(<Product product={product} loadCart={loadCart} />);
-    
-    const quantitySelector = screen.getByTestId('quantity-selector')
-    expect(quantitySelector).toHaveValue('1')
+
+    const quantitySelector = screen.getByTestId("quantity-selector");
+    const user = userEvent.setup();
+
+    expect(quantitySelector).toHaveValue("1");
+    await user.selectOptions(quantitySelector, "3");
+    expect(quantitySelector).toHaveValue("3");
   });
 });
