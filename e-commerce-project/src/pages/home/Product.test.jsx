@@ -134,4 +134,12 @@ describe("Product component", () => {
     });
     expect(loadCart).toHaveBeenCalled();
   });
+
+  // Test if user can select a quantity
+  it("enables the user to select a quantity", () => {
+    render(<Product product={product} loadCart={loadCart} />);
+    
+    const quantitySelector = screen.getByTestId('quantity-selector')
+    expect(quantitySelector).toHaveValue('1')
+  });
 });
