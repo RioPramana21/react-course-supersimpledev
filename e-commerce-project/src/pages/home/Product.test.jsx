@@ -22,6 +22,7 @@ describe("Product component", () => {
    */
   let product;
   let loadCart;
+  let user;
 
   beforeEach(() => {
     product = {
@@ -38,6 +39,7 @@ describe("Product component", () => {
 
     // This function doesn't do anything
     loadCart = vi.fn(); // Mock function for loadCart prop
+    user = userEvent.setup()
   });
 
   /**
@@ -103,7 +105,7 @@ describe("Product component", () => {
     render(<Product product={product} loadCart={loadCart} />);
 
     // Simulate user clicking the "Add to Cart" button
-    const user = userEvent.setup();
+    
     const addToCartButton = screen.getByTestId("add-to-cart-button");
     // user.click(...) returns a Promise, so we need to await it
     await user.click(addToCartButton);
@@ -141,7 +143,6 @@ describe("Product component", () => {
 
     const quantitySelector = screen.getByTestId("quantity-selector");
     const addToCartButton = screen.getByTestId("add-to-cart-button");
-    const user = userEvent.setup();
 
     // Check quantity is initially 1
     expect(quantitySelector).toHaveValue("1");
