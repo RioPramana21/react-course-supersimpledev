@@ -39,7 +39,7 @@ describe("Product component", () => {
 
     // This function doesn't do anything
     loadCart = vi.fn(); // Mock function for loadCart prop
-    user = userEvent.setup()
+    user = userEvent.setup();
   });
 
   /**
@@ -105,7 +105,6 @@ describe("Product component", () => {
     render(<Product product={product} loadCart={loadCart} />);
 
     // Simulate user clicking the "Add to Cart" button
-    
     const addToCartButton = screen.getByTestId("add-to-cart-button");
     // user.click(...) returns a Promise, so we need to await it
     await user.click(addToCartButton);
