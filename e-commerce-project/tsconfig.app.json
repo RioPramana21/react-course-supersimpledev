@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    /*
+    Notice that when we try to move our code from JavaScript to TypeScript,
+    A lot of imports will break because TypeScript by default doesn't allow importing JavaScript files.
+    (We used to import .jsx, but now we have .tsx files)
+    e.g. import { HomePage } from "./pages/home/HomePage" // This will break if HomePage is a .js or .jsx file.
+
+    Solution:
+    We could rename all .js files to .ts or .tsx, but that would be tedious,
+    since that could introduce a lot of type errors that we would have to fix right away.
+    So to make the migration easier, we can set "allowJs" to true,
+    so that TypeScript will allow importing JavaScript files.
+    This way, we can gradually migrate our codebase from JavaScript to TypeScript,
+    one file at a time, without breaking the imports.
+    */
+    "allowJs": true, // Allow us to mix JS and TS files
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
