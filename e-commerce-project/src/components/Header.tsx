@@ -26,7 +26,37 @@ import { useSearchParams } from "react-router";
   e.g. .orders-link.active { font-weight: bold; }
 */
 
-export function Header({ cart }) {
+/**
+ * Since now this is .tsx, type checking is applied
+ * However, in this case, TypeScript cannot infer the type of "cart" prop automatically
+ * But we can't just type { cart: [] }.
+ * Remember, { cart } is just a shortcut for props object destructuring.
+ * So, we need to define the type of the entire props (parameter).
+ * Here, props is an object with a "cart" property which is an array of objects.
+ */
+
+/**
+ * Instead of writing the complex type inline which is hard to read,
+ * we can define a "Type Alias" for the Header props object outside the function using the `type` keyword.
+ * A Type Alias allows us to create a custom type with a specific structure
+ * We can then use this type alias to type the props parameter in the Header function
+ */
+type HeaderProps = {
+  /**
+   * Here, we are telling TypeScript that "cart" is an array of objects
+   * Each object has "productId" (string), "quantity" (number), and "deliveryOptionId" (string) properties
+   *
+   * So now, for example if we try to access cartItem.quantit instead of cartItem.quantity,
+   * TypeScript is able to check the code and throw an error for the typo
+   */
+  cart: {
+    productId: string;
+    quantity: number;
+    deliveryOptionId: string;
+  }[];
+};
+
+export function Header({ cart }: HeaderProps) {
   const navigate = useNavigate();
   /**
    * We use useState to keep track of the search input value
