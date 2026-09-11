@@ -87,6 +87,7 @@ export function Header({ cart }: HeaderProps) {
   return (
     <div className="header">
       <div className="left-section">
+        <p>Header</p>
         {/* 
             To change <a> to a Link, we need to replace the tag name and use the `to` prop instead of `href`
         */}
